@@ -5,16 +5,16 @@ let map, routeLine, marker;
 let customRoute = { coords: [], totalDistance: 0 };
 
 const startPoints = {
-    boardwalk: { name: "Boardwalk Resort", coord: [28.367035, -81.556312] }, // First point of both routes
+    boardwalk: { name: "Boardwalk Resort", coord: [28.367035, -81.556312] },
     contemporary: { name: "Contemporary", coord: [28.41536015750347, -81.57481301542497] },
     grandFloridian: { name: "Grand Floridian", coord: [28.41201873329078, -81.58744656089249] }
 };
 
 const endPoints = {
     boardwalk: [
-        { name: "Hollywood Studios", coord: [28.358273, -81.558855] }, // Last point of Hollywood route
+        { name: "Hollywood Studios", coord: [28.358273, -81.558855] },
         { name: "Epcot", coord: [28.3747, -81.5494] },
-        { name: "Lake", coord: [28.367017, -81.556526] } // Last point of Lake route
+        { name: "Lake", coord: [28.367035, -81.556312] }
     ],
     contemporary: [
         { name: "Magic Kingdom", coord: [28.4177, -81.5812] }
@@ -109,7 +109,7 @@ const predefinedRoutes = {
             [28.358358, -81.558603],
             [28.358273, -81.558855],
         ],
-        totalDistance: 1.36 // Previously calculated
+        totalDistance: 1.36
     },
     "boardwalk-lake": {
         coords: [
@@ -185,27 +185,27 @@ const predefinedRoutes = {
             [28.367054, -81.557063],
             [28.367017, -81.556912],
             [28.366998, -81.556714],
-            [28.367017, -81.556526],
+            [28.367035, -81.556312],
         ],
-        totalDistance: 0.57 // Calculated below
+        totalDistance: 0.58
     },
     "boardwalk-epcot": {
         coords: [
-            [28.367035, -81.556312], // Placeholder - replace with your route
+            [28.367035, -81.556312],
             [28.374700, -81.549400],
         ],
         totalDistance: 0.8
     },
     "contemporary-magickingdom": {
         coords: [
-            [28.415360, -81.574813], // Placeholder - replace with your route
+            [28.415360, -81.574813],
             [28.417700, -81.581200],
         ],
         totalDistance: 0.5
     },
     "grandfloridian-magickingdom": {
         coords: [
-            [28.412019, -81.587447], // Placeholder - replace with your route
+            [28.412019, -81.587447],
             [28.417700, -81.581200],
         ],
         totalDistance: 1.0
@@ -214,8 +214,9 @@ const predefinedRoutes = {
 
 function initMap() {
     map = L.map('map').setView(startPoints.boardwalk.coord, 13);
-    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-        attribution: '© <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a>'
+    // Use Esri World Imagery (satellite) tiles
+    L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}', {
+        attribution: 'Tiles &copy; Esri &mdash; Source: Esri, i-cubed, USDA, USGS, AEX, GeoEye, Getmapping, Aerogrid, IGN, IGP, UPR-EGP, and the GIS User Community'
     }).addTo(map);
 
     customRoute = predefinedRoutes["boardwalk-hollywoodstudios"];
