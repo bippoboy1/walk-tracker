@@ -4,7 +4,6 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Walk Tracker</title>
-    <!-- Leaflet CSS -->
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
     <style>
         body {
@@ -36,19 +35,37 @@
         }
         #map {
             height: 400px;
-            width: 100%;
+            width: 80%;
             margin: 20px auto;
+        }
+        #waypoints {
+            list-style: none;
+            padding: 0;
+            max-width: 400px;
+            margin: 10px auto;
+        }
+        #waypoints li {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin: 5px 0;
         }
     </style>
 </head>
 <body>
-    <h1>My Walk Tracker</h1>
-    <label for="routeSelect">Choose a Route:</label>
-    <select id="routeSelect">
-        <option value="cornwall">Cornwall Coastal Path (10 km)</option>
-        <option value="centralPark">Central Park Loop (3 km)</option>
-        <option value="thames">Thames Path Snippet (5 km)</option>
+    <h1>Walk Tracker</h1>
+    <label for="startSelect">Choose Starting Point:</label>
+    <select id="startSelect">
+        <option value="london">London (Tower Bridge)</option>
+        <option value="newYork">New York (Central Park SW)</option>
+        <option value="paris">Paris (Eiffel Tower)</option>
     </select>
+    <h3>Plan Your Route</h3>
+    <p>Tick waypoints and order them:</p>
+    <ul id="waypoints">
+        <!-- Waypoints will be populated by JS -->
+    </ul>
+    <button id="updateRouteButton">Update Route</button>
     <br>
     <button id="startButton">Start Tracking</button>
     <button id="stopButton">Stop Tracking</button>
@@ -57,7 +74,6 @@
     <progress id="progressBar" value="0" max="100"></progress>
     <div id="map"></div>
 
-    <!-- Leaflet JS -->
     <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
     <script src="script.js"></script>
 </body>
