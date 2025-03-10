@@ -4,14 +4,14 @@ let watchId = null;
 let map, routeLine, marker;
 let customRoute = { coords: [], totalDistance: 5 }; // Default route
 
-// Starting points
+// Starting points (updated to your coordinates)
 const startPoints = {
-    london: { name: "London (Tower Bridge)", coord: [51.5055, -0.0754] },
-    newYork: { name: "New York (Central Park SW)", coord: [40.7650, -73.9750] },
-    paris: { name: "Paris (Eiffel Tower)", coord: [48.8584, 2.2945] }
+    boardwalk: { name: "Boardwalk Resort", coord: [28.367049768113652, -81.55626872475698] },
+    contemporary: { name: "Contemporary", coord: [28.41536015750347, -81.57481301542497] },
+    grandFloridian: { name: "Grand Floridian", coord: [28.41201873329078, -81.58744656089249] }
 };
 
-// Waypoints (global list for all starting points)
+// Waypoints (unchanged for now—update these if you want Disney-themed ones)
 const waypoints = [
     { name: "Big Ben", coord: [51.5007, -0.1246] },
     { name: "Statue of Liberty", coord: [40.6892, -74.0445] },
@@ -22,12 +22,12 @@ const waypoints = [
 ];
 
 function initMap() {
-    map = L.map('map').setView(startPoints.london.coord, 13);
+    map = L.map('map').setView(startPoints.boardwalk.coord, 13); // Default to Boardwalk
     L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
         attribution: '© <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a>'
     }).addTo(map);
 
-    customRoute.coords = [startPoints.london.coord];
+    customRoute.coords = [startPoints.boardwalk.coord];
     routeLine = L.polyline(customRoute.coords, { color: 'blue' }).addTo(map);
     marker = L.marker(customRoute.coords[0]).addTo(map);
     map.fitBounds(routeLine.getBounds());
@@ -94,7 +94,7 @@ function updateProgressDisplay() {
     const progressKm = Math.min(totalDistance, customRoute.totalDistance);
     const progressPercent = (progressKm / customRoute.totalDistance) * 100;
     document.getElementById('progress').innerText = 
-        `Progress on Custom Route (${customRoute.totalDistance} km): ${progressKm.toFixed(2)} km / ${progressPercent.toFixed(1)}%`;
+        `Progress on Custom Route (${customRoute.totalDistance.toFixed(2)} km): ${progressKm.toFixed(2)} km / ${progressPercent.toFixed(1)}%`;
     document.getElementById('progressBar').value = progressPercent;
 
     const newPosition = getPositionOnRoute(totalDistance);
@@ -149,7 +149,7 @@ function updateRoute() {
         customRoute.coords.push(waypoints[index].coord);
     });
 
-    // Recalculate total distance (rough estimate)
+    // Recalculate total distance
     customRoute.totalDistance = 0;
     for (let i = 1; i < customRoute.coords.length; i++) {
         customRoute.totalDistance += L.latLng(customRoute.coords[i-1]).distanceTo(L.latLng(customRoute.coords[i])) / 1000;
