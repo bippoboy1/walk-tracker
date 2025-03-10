@@ -2,54 +2,56 @@ let totalDistance = 0;
 let lastPosition = null;
 let watchId = null;
 let map, routeLine, marker;
-let customRoute = { coords: [], totalDistance: 5 }; // Default route
+let customRoute = { coords: [], totalDistance: 0 };
 
-// Starting points (updated to your coordinates)
+// Starting points
 const startPoints = {
     boardwalk: { name: "Boardwalk Resort", coord: [28.367049768113652, -81.55626872475698] },
     contemporary: { name: "Contemporary", coord: [28.41536015750347, -81.57481301542497] },
     grandFloridian: { name: "Grand Floridian", coord: [28.41201873329078, -81.58744656089249] }
 };
 
-// Waypoints (unchanged for now—update these if you want Disney-themed ones)
-const waypoints = [
-    { name: "Big Ben", coord: [51.5007, -0.1246] },
-    { name: "Statue of Liberty", coord: [40.6892, -74.0445] },
-    { name: "Louvre", coord: [48.8606, 2.3376] },
-    { name: "Times Square", coord: [40.7580, -73.9855] },
-    { name: "Notre-Dame", coord: [48.8529, 2.3500] },
-    { name: "Buckingham Palace", coord: [51.5014, -0.1419] }
-];
+// Endpoints
+const endPoints = {
+    boardwalk: [
+        { name: "Hollywood Studios", coord: [28.3575, -81.5582] },
+        { name: "Epcot", coord: [28.3747, -81.5494] },
+        { name: "Lake", coord: [28.3706, -81.5208] } // Assuming Disney Springs as "Lake" for now
+    ],
+    contemporary: [
+        { name: "Magic Kingdom", coord: [28.4177, -81.5812] }
+    ],
+    grandFloridian: [
+        { name: "Magic Kingdom", coord: [28.4177, -81.5812] }
+    ]
+};
 
 function initMap() {
-    map = L.map('map').setView(startPoints.boardwalk.coord, 13); // Default to Boardwalk
+    map = L.map('map').setView(startPoints.boardwalk.coord, 13);
     L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
         attribution: '© <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a>'
     }).addTo(map);
 
-    customRoute.coords = [startPoints.boardwalk.coord];
+    customRoute.coords = [startPoints.boardwalk.coord, endPoints.boardwalk[0].coord];
+    customRoute.totalDistance = L.latLng(customRoute.coords[0]).distanceTo(L.latLng(customRoute.coords[1])) / 1000;
     routeLine = L.polyline(customRoute.coords, { color: 'blue' }).addTo(map);
     marker = L.marker(customRoute.coords[0]).addTo(map);
     map.fitBounds(routeLine.getBounds());
     updateProgressDisplay();
 }
 
-function populateWaypoints() {
-    const ul = document.getElementById('waypoints');
-    waypoints.forEach((waypoint, index) => {
-        const li = document.createElement('li');
-        li.innerHTML = `
-            <label>
-                <input type="checkbox" value="${index}" onchange="updateRoute()">
-                ${waypoint.name}
-            </label>
-            <div>
-                <button onclick="moveWaypoint(${index}, -1)">↑</button>
-                <button onclick="moveWaypoint(${index}, 1)">↓</button>
-            </div>
-        `;
-        ul.appendChild(li);
+function populateEndPoints() {
+    const startKey = document.getElementById('startSelect').value;
+    const endSelect = document.getElementById('endSelect');
+    endSelect.innerHTML = ''; // Clear existing options
+
+    endPoints[startKey].forEach((endpoint, index) => {
+        const option = document.createElement('option');
+        option.value = index;
+        option.text = endpoint.name;
+        endSelect.appendChild(option);
     });
+    updateRoute(); // Update route when endpoints change
 }
 
 function calculateDistance(pos1, pos2) {
@@ -140,20 +142,12 @@ function stopTracking() {
 
 function updateRoute() {
     const startKey = document.getElementById('startSelect').value;
+    const endIndex = document.getElementById('endSelect').value;
     const startCoord = startPoints[startKey].coord;
-    customRoute.coords = [startCoord];
+    const endCoord = endPoints[startKey][endIndex].coord;
 
-    const checkboxes = document.querySelectorAll('#waypoints input[type="checkbox"]:checked');
-    checkboxes.forEach(checkbox => {
-        const index = parseInt(checkbox.value);
-        customRoute.coords.push(waypoints[index].coord);
-    });
-
-    // Recalculate total distance
-    customRoute.totalDistance = 0;
-    for (let i = 1; i < customRoute.coords.length; i++) {
-        customRoute.totalDistance += L.latLng(customRoute.coords[i-1]).distanceTo(L.latLng(customRoute.coords[i])) / 1000;
-    }
+    customRoute.coords = [startCoord, endCoord];
+    customRoute.totalDistance = L.latLng(startCoord).distanceTo(L.latLng(endCoord)) / 1000;
 
     routeLine.setLatLngs(customRoute.coords);
     marker.setLatLng(customRoute.coords[0]);
@@ -167,27 +161,11 @@ function updateRoute() {
     updateProgressDisplay();
 }
 
-function moveWaypoint(index, direction) {
-    const liElements = Array.from(document.querySelectorAll('#waypoints li'));
-    const currentIndex = liElements.findIndex(li => li.querySelector(`input[value="${index}"]`));
-    const newIndex = currentIndex + direction;
-
-    if (newIndex >= 0 && newIndex < liElements.length) {
-        const currentLi = liElements[currentIndex];
-        const targetLi = liElements[newIndex];
-        if (direction > 0) {
-            targetLi.after(currentLi);
-        } else {
-            targetLi.before(currentLi);
-        }
-        updateRoute();
-    }
-}
-
 initMap();
-populateWaypoints();
+populateEndPoints();
 document.getElementById('startButton').addEventListener('click', startTracking);
 document.getElementById('stopButton').addEventListener('click', stopTracking);
-document.getElementById('startSelect').addEventListener('change', updateRoute);
+document.getElementById('startSelect').addEventListener('change', populateEndPoints);
+document.getElementById('endSelect').addEventListener('change', updateRoute);
 document.getElementById('updateRouteButton').addEventListener('click', updateRoute);
 document.getElementById('stopButton').disabled = true;

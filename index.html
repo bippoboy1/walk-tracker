@@ -38,18 +38,6 @@
             width: 80%;
             margin: 20px auto;
         }
-        #waypoints {
-            list-style: none;
-            padding: 0;
-            max-width: 400px;
-            margin: 10px auto;
-        }
-        #waypoints li {
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            margin: 5px 0;
-        }
     </style>
 </head>
 <body>
@@ -60,11 +48,12 @@
         <option value="contemporary">Contemporary</option>
         <option value="grandFloridian">Grand Floridian</option>
     </select>
-    <h3>Plan Your Route</h3>
-    <p>Tick waypoints and order them:</p>
-    <ul id="waypoints">
-        <!-- Waypoints will be populated by JS -->
-    </ul>
+    <br>
+    <label for="endSelect">Choose Endpoint:</label>
+    <select id="endSelect">
+        <!-- Options populated by JS -->
+    </select>
+    <br>
     <button id="updateRouteButton">Update Route</button>
     <br>
     <button id="startButton">Start Tracking</button>
