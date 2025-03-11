@@ -28,15 +28,15 @@ const endPoints = {
 const predefinedRoutes = {
     "boardwalk-hollywoodstudios": {
         coords: boardwalkHollywoodStudiosCoords, // Imported from routes/boardwalk-hollywoodstudios.js
-        totalDistance: 1.36
+        totalDistance: 1.57
     },
     "boardwalk-lake": {
         coords: boardwalkLakeCoords, // Imported from routes/boardwalk-lake.js
-        totalDistance: 0.58
+        totalDistance: 1.33
     },
     "boardwalk-epcot": {
     coords: boardwalkEpcotCoords,
-    totalDistance: 0.8
+    totalDistance: 0.58
     },
     "contemporary-magickingdom": {
         coords: [
