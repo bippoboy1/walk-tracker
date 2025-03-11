@@ -35,11 +35,8 @@ const predefinedRoutes = {
         totalDistance: 0.58
     },
     "boardwalk-epcot": {
-        coords: [
-            [28.367035, -81.556312],
-            [28.374700, -81.549400],
-        ],
-        totalDistance: 0.8
+    coords: boardwalkEpcotCoords,
+    totalDistance: 0.8
     },
     "contemporary-magickingdom": {
         coords: [
